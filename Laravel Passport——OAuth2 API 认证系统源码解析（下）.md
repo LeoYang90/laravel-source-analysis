@@ -1,6 +1,7 @@
 # Laravel Passport——OAuth2 API 认证系统源码解析（下）
 
 ## 隐式授权
+
 隐式授权类似于授权码授权，但是它只令牌将返回给客户端而不交换授权码。这种授权最常用于无法安全存储客户端凭据的 JavaScript 或移动应用程序。通过调用 `AuthServiceProvider` 中的 `enableImplicitGrant` 方法来启用这种授权：
 
 ```php
@@ -92,7 +93,7 @@ public function __construct(\DateInterval $accessTokenTTL, $queryDelimiter = '#'
     $this->accessTokenTTL = $accessTokenTTL;
     $this->queryDelimiter = $queryDelimiter;
 }
-    
+
 public function completeAuthorizationRequest(AuthorizationRequest $authorizationRequest)
 {
     if ($authorizationRequest->getUser() instanceof UserEntityInterface === false) {
@@ -146,14 +147,14 @@ public function completeAuthorizationRequest(AuthorizationRequest $authorization
 
 这个用于构建 `jwt` 的私钥就是 `oauth-private.key`，我们知道，`jwt` 一般有三个部分组成：`header`、`claim`、`sign`, 用于 `oauth2` 的 `jwt` 中 `claim` 主要构成有：
 
-- aud  客户端 id
-- jti  access_token 随机码
-- iat  生成时间
-- nbf  拒绝接受 jwt 时间
-- exp  access_token 失效时间
-- sub  用户 id
+* aud  客户端 id
+* jti  access\_token 随机码
+* iat  生成时间
+* nbf  拒绝接受 jwt 时间
+* exp  access\_token 失效时间
+* sub  用户 id
 
-具体可以参考 : [JSON Web Token (JWT) draft-ietf-oauth-json-web-token-32](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)
+具体可以参考 : [JSON Web Token \(JWT\) draft-ietf-oauth-json-web-token-32](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32)
 
 ```php
 public function convertToJWT(CryptKey $privateKey)
@@ -251,7 +252,6 @@ protected $routeMiddleware = [
 Route::get('/user', function(Request $request) {
     ...
 })->middleware('client');
-
 ```
 
 接下来通过向 oauth/token 接口发出请求来获取令牌:
@@ -267,7 +267,6 @@ $response = $guzzle->post('http://your-app.com/oauth/token', [
 ]);
 
 echo json_decode((string) $response->getBody(), true);
-
 ```
 
 客户端模式类似于授权码模式的后一部分，利用客户端 id 与客户端密码来获取 `access_token`：
@@ -295,14 +294,13 @@ public function respondToAccessTokenRequest(
 }
 ```
 
-类似于授权码模式，`access_token` 的发放也是通过 `Bearer Token` 中存放 JWT。 
-
+类似于授权码模式，`access_token` 的发放也是通过 `Bearer Token` 中存放 JWT。
 
 ## 密码模式
 
 OAuth2 密码授权机制可以让你自己的客户端（如移动应用程序）邮箱地址或者用户名和密码获取访问令牌。如此一来你就可以安全地向自己的客户端发出访问令牌，而不需要遍历整个 OAuth2 授权代码重定向流程。
 
-创建密码授权的客户端后，就可以通过向用户的电子邮件地址和密码向 /oauth/token 路由发出 POST 请求来获取访问令牌。而该路由已经由 Passport::routes 方法注册，因此不需要手动定义它。如果请求成功，会在服务端返回的 JSON 响应中收到一个 access_token 和 refresh_token：
+创建密码授权的客户端后，就可以通过向用户的电子邮件地址和密码向 /oauth/token 路由发出 POST 请求来获取访问令牌。而该路由已经由 Passport::routes 方法注册，因此不需要手动定义它。如果请求成功，会在服务端返回的 JSON 响应中收到一个 access\_token 和 refresh\_token：
 
 ```php
 $response = $http->post('http://your-app.com/oauth/token', [
@@ -317,7 +315,6 @@ $response = $http->post('http://your-app.com/oauth/token', [
 ]);
 
 return json_decode((string) $response->getBody(), true);
-
 ```
 
 只要用用户名与密码来验证合法性就可以发放 `access_token` 与 `refresh_token`：
@@ -374,8 +371,8 @@ protected function validateUser(ServerRequestInterface $request, ClientEntityInt
 
     return $user;
 }
-
 ```
+
 ## 路由保护
 
 Passport 包含一个 验证保护机制 可以验证请求中传入的访问令牌。配置 api 的看守器使用 passport 驱动程序后，只需要在需要有效访问令牌的任何路由上指定 auth:api 中间件：
@@ -397,27 +394,24 @@ $response = $client->request('GET', '/api/user', [
 ]);
 ```
 
-
 ## auth:api 中间件
 
 当我们已经配置完成 `Passport` 的四种模式并拿到 `access_token` 之后，我们就可以利用令牌去资源服务器获取数据了。资源服务器最常用的校验令牌的中间件就是 `auth:api`，中间件是 `auth`，`api` 是中间件的参数：
 
 ```php
-
 'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
-
 ```
+
 这个中间件是验证登录状态的常用中间件：
 
 ```php
-
 class Authenticate
 {
     public function __construct(Auth $auth)
     {
         $this->auth = $auth;
     }
-    
+
     public function handle($request, Closure $next, ...$guards)
     {
         $this->authenticate($guards);
@@ -441,13 +435,11 @@ class Authenticate
         throw new AuthenticationException('Unauthenticated.', $guards);
     }
 }
-
 ```
 
 我们的参数 `api` 就是上面的 `guards`，`Auth` 是 `laravel` 自带的登录校验服务：
 
 ```php
-
 class AuthManager implements FactoryContract
 {
     public function guard($name = null)
@@ -479,13 +471,11 @@ class AuthManager implements FactoryContract
     }
 
 }
-
 ```
 
 文档告诉我们，若想要使用 `passport` 服务，我们的 `config/auth` 文件需要如此配置：
 
 ```php
-
 'guards' => [
     'web' => [
         'driver' => 'session',
@@ -542,7 +532,7 @@ class TokenGuard
         $this->provider = $provider;
         $this->encrypter = $encrypter;
     }
-    
+
     public function user(Request $request)
     {
         if ($request->bearerToken()) {
@@ -553,6 +543,7 @@ class TokenGuard
     }
 }
 ```
+
 可以看到，`TokenGuard` 支持两种 `Token` 的验证：`BearerToken` 与 `cookie`。
 
 我们首先看 `BearerToken`:
@@ -599,7 +590,6 @@ protected function authenticateViaBearerToken($request)
         )->report($e);
     }
 }
-
 ```
 
 首先，需要验证请求的合法性：
@@ -701,7 +691,7 @@ class Parser
 
         return new Token($header, $claims, $signature, $data);
     }
-    
+
     protected function splitJwt($jwt)
     {
         if (!is_string($jwt)) {
@@ -716,7 +706,7 @@ class Parser
 
         return $data;
     }
-    
+
     protected function parseHeader($data)
     {
         $header = (array) $this->decoder->jsonDecode($this->decoder->base64UrlDecode($data));
@@ -727,7 +717,7 @@ class Parser
 
         return $header;
     }
-    
+
     protected function parseClaims($data)
     {
         $claims = (array) $this->decoder->jsonDecode($this->decoder->base64UrlDecode($data));
@@ -738,7 +728,7 @@ class Parser
 
         return $claims;
     }
-    
+
     protected function parseSignature(array $header, $data)
     {
         if ($data == '' || !isset($header['alg']) || $header['alg'] == 'none') {
@@ -793,8 +783,8 @@ public function __construct($currentTime = null)
         'exp' => $currentTime
     ];
 }
-            
-            
+
+
 public function validate(ValidationData $data)
 {
     foreach ($this->getValidatableClaims() as $claim) {
@@ -825,12 +815,12 @@ public function __construct(array $callbacks = [])
 
 我们前面说过，
 
-- aud 客户端 id
-- jti access_token 随机码
-- iat 生成时间
-- nbf 拒绝接受 jwt 时间
-- exp access_token 失效时间
-- sub 用户 id
+* aud 客户端 id
+* jti access\_token 随机码
+* iat 生成时间
+* nbf 拒绝接受 jwt 时间
+* exp access\_token 失效时间
+* sub 用户 id
 
 因此，`JWT` 的生成时间、拒绝接受时间、失效时间就会被验证完成。
 
@@ -878,8 +868,6 @@ if ($this->clients->revoked($clientId)) {
 }
 
 return $token ? $user->withAccessToken($token) : null;
-
-
 ```
 
 中间件验证完成。
@@ -920,7 +908,8 @@ class CheckClientCredentials
     \Laravel\Passport\Http\Middleware\CreateFreshApiToken::class,
 ],
 ```
-Passport 的这个中间件将会在你所有的对外请求中添加一个 laravel_token cookie。该 cookie 将包含一个加密后的 JWT ，Passport 将用来验证来自 JavaScript 应用程序的 API 请求。至此，你可以在不明确传递访问令牌的情况下向应用程序的 API 发出请求
+
+Passport 的这个中间件将会在你所有的对外请求中添加一个 laravel\_token cookie。该 cookie 将包含一个加密后的 JWT ，Passport 将用来验证来自 JavaScript 应用程序的 API 请求。至此，你可以在不明确传递访问令牌的情况下向应用程序的 API 发出请求
 
 ```php
 axios.get('/user')
@@ -928,13 +917,13 @@ axios.get('/user')
         console.log(response.data);
     });
 ```
+
 当使用上面的授权方法时，Axios 会自动带上 X-CSRF-TOKEN 请求头传递。另外，默认的 Laravel JavaScript 脚手架会让 Axios 发送 X-Requested-With 请求头:
 
 ```php
 window.axios.defaults.headers.common = {
     'X-Requested-With': 'XMLHttpRequest',
 };
-
 ```
 
 ## CreateFreshApiToken 中间件
@@ -956,7 +945,7 @@ class CreateFreshApiToken
 
         return $response;
     }
-    
+
     public function make($userId, $csrfToken)
     {
         $config = $this->config->get('session');
@@ -973,7 +962,7 @@ class CreateFreshApiToken
             true
         );
     }
-    
+
     protected function createToken($userId, $csrfToken, Carbon $expiration)
     {
         return JWT::encode([
@@ -993,7 +982,7 @@ class CreateFreshApiToken
     {
         return $request->isMethod('GET') && $request->user($this->guard);
     }
-    
+
     protected function responseShouldReceiveFreshToken($response)
     {
         return $response instanceof Response && ! $this->alreadyContainsToken($response);
@@ -1046,12 +1035,6 @@ protected function validCsrf($token, $request)
     );
 }
 ```
-
-
-
-
-
-
 
 
 
