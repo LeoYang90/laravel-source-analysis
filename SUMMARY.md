@@ -28,7 +28,7 @@
 * Laravel Config 配置文件
   * [Laravel Config—— 配置文件的加载与源码解析](/Laravel Config—— 配置文件的加载与源码解析.md)
 * Laravel Exceptions 异常处理
-  * [Laravel Exceptions——异常与错误处理.md](/Laravel Exceptions——异常与错误处理.md)[Laravel Config—— 配置文件的加载与源码解析](/Laravel Config—— 配置文件的加载与源码解析.md)
+  * [Laravel Exceptions——异常与错误处理.md](/Laravel Exceptions——异常与错误处理.md)
 * Laravel Providers 服务提供者
   * [Laravel Providers——服务提供者的注册与启动源码解析](/Laravel Providers——服务提供者的注册与启动源码解析.md)
 * Laravel Database 数据库
@@ -54,7 +54,5 @@
   * [Laravel Broadcast——广播系统源码剖析](/Laravel Broadcast——广播系统源码剖析.md)
 * Laravel Passport
   * [Laravel Passport——OAuth2 API 认证系统源码解析](/Laravel Passport——OAuth2 API 认证系统源码解析.md)
-  * [Laravel Passport——OAuth2 API 认证系统源码解析\(下](/Laravel Passport——OAuth2 API 认证系统源码解析（下）.md)\)
-
-
+  * [Laravel Passport——OAuth2 API 认证系统源码解析\(下\)](/Laravel Passport——OAuth2 API 认证系统源码解析（下）.md)
 
