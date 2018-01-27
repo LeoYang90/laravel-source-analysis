@@ -11,6 +11,8 @@
 
 由于本人能力有限，文章中可能会有一些问题，敬请提出意见与建议，谢谢。
 
+GitBook 地址 ：https://www.gitbook.com/book/leoyang90/laravel-source-analysis
+
 
 
 
