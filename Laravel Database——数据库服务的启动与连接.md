@@ -1,18 +1,3 @@
-title: Laravel Database——数据库服务的启动与连接
-tags:
-  - php
-  - laravel
-  - database
-  - 源码
-categories:
-  - php
-  - database
-  - laravel
-date: 2017-09-13 12:50:02
----
-
----
-
 ## **前言**
 数据库是 `laravel` 及其重要的组成部分，大致的讲，`laravel` 的数据库功能可以分为两部分：数据库 `DB`、数据库 `Eloquent Model`。数据库的 `Eloquent` 是功能十分丰富的 `ORM`，让我们可以避免写繁杂的 `sql` 语句。数据库 `DB` 是比较底层的与 `pdo` 交互的功能，`Eloquent` 的底层依赖于 `DB`。本文将会介绍数据库 `DB` 中关于数据库服务的启动与连接部分。
 

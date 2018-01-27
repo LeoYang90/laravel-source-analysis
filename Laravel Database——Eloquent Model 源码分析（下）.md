@@ -1,18 +1,3 @@
-title: Laravel Database——Eloquent Model 源码分析（下）
-tags:
-  - laravel
-  - database
-  - eloquent
-  - php
-categories:
-  - laravel
-  - database
-  - php
-author: leo yang
-date: 2017-10-09 23:11:00
----
----
-
 ## 获取模型
 
 ### get 函数

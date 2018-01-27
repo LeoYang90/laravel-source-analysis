@@ -1,14 +1,3 @@
-title: Laravel HTTP——Pipeline中间件处理源码分析
-tags:
-  - php
-  - laravel
-  - router
-  - 源码
-categories:
-  - php
-author: leo yang
-date: 2017-07-19 17:46:00
----
 # 前言
 当所有的路由都加载完毕后，就会根据请求的 `url` 来将请求分发到对应的路由上去。然而，在分发到路由之前还要经过各种中间件的计算。`laravel` 利用装饰者模式来实现中间件的功能。
 

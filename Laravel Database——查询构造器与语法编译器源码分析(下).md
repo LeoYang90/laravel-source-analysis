@@ -1,17 +1,3 @@
-title: Laravel Database——查询构造器与语法编译器源码分析(下)
-tags:
-  - php
-  - laravel
-  - database
-  - 源码
-categories:
-  - php
-  - database
-  - laravel
-date: 2017-10-02 11:15:00
----
-
----
 ## insert 语句
 
 `insert` 语句也是我们经常使用的数据库操作，它的源码如下：

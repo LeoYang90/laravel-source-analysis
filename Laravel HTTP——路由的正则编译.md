@@ -1,10 +1,3 @@
-title: Laravel Http——路由的正则编译
-tags: []
-categories: []
-date: 2017-07-24 17:05:00
----
-
----
 # 前言
 利用 `pipeline` 进行中间件的层层处理后，接下来 `laravel` 就会利用请求的 `url` 来寻找与其对应的路由，`laravel` 采用对路由注册的 `uri` 进行正则编译，然后利用 `request` 的 `url` 进行正则匹配来寻找正确的路由。
 

@@ -1,18 +1,3 @@
-title: Laravel Database——Eloquent Model 源码分析(上)
-tags:
-  - php
-  - laravel
-  - database
-  - eloquent
-  - 源码
-categories:
-  - php
-  - database
-  - laravel
-date: 2017-10-05 23:25:00
----
-
----
 ## 前言
 
 前面几个博客向大家介绍了查询构造器的原理与源码，然而查询构造器更多是为 `Eloquent Model` 服务的，我们对数据库操作更加方便的是使用 `Eloquent Model`。 本篇文章将会大家介绍 `Model` 的一些特性原理。

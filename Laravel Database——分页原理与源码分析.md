@@ -1,19 +1,3 @@
-title: Laravel Database——分页原理与源码分析
-
-tags:
-  - php
-  - laravel
-  - database
-  - paginate
-  - 源码
-categories:
-  - php
-  - database
-  - laravel
-date: 2017-09-30 22:11:07
----
-
----
 ## paginate 分页
 
 `laravel` 的分页用起来非常简单，只需要对 `query` 调用 `paginate` 函数，把返回的对象扔给前端 `blade` 文件，在 `blade` 文件调用函数 `render` 函数或者 `link` 函数，就可以得到 `上一页`、`下一页` 等等分页特效。

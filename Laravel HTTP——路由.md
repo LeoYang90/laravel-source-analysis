@@ -1,15 +1,3 @@
-title: Laravel HTTP——路由
-tags:
-  - router
-  - laravel
-  - php
-categories:
-  - laravel
-  - php
-  - router
-author: Leo Yang
-date: 2017-07-16 00:07:00
----
 # 前言
 作为一个 web 后台框架，路由无疑是极其重要的一部分。本博客接下来几篇文章都将会围绕路由这一主题来展开讨论，分别讲述：
 > - 路由的使用

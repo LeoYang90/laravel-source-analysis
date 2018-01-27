@@ -1,14 +1,3 @@
-title: Laravel HTTP——添加路由源码分析
-tags:
-  - php
-  - laravel
-  - router
-  - 源码
-categories:
-  - php
-author: leo yang
-date: 2017-07-19 17:46:00
----
 # 前言
 作为 `laravel` 极其重要的一部分，`route` 功能贯穿着整个网络请求，是 `request` 生命周期的主干。本文主要讲述 `route` 服务的注册与启动、路由的属性注册。本篇内容相对简单，更多的是框架添加路由的整体设计流程。
 

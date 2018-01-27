@@ -1,18 +1,3 @@
-title: Laravel Database——数据库的 CRUD 操作
-tags:
-  - php
-  - laravel
-  - database
-  - CRUD
-  - 源码
-categories:
-  - php
-  - database
-  - laravel
-date: 2017-09-16 17:09:38
----
-
----
 ## 前言 
 当 `connection` 对象构建初始化完成后，我们就可以利用 `DB` 来进行数据库的 `CRUD` ( `Create`、`Retrieve`、`Update`、`Delete`)操作。本篇文章，我们将会讲述 `laravel` 如何与 `pdo` 交互，实现基本数据库服务的原理。
 

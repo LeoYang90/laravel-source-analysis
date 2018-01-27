@@ -1,19 +1,3 @@
-title: Laravel Database——查询构造器与语法编译器源码分析(上)
-
-tags:
-  - php
-  - laravel
-  - database
-  - 源码
-categories:
-  - php
-  - database
-  - laravel
-date: 2017-09-19 23:46:36
----
-
----
-
 ## 前言
 
 在前两个文章中，我们分析了数据库的连接启动与数据库底层 `CRUD` 的原理，底层数据库服务支持原生 `sql` 的运行。本文以 `mysql` 为例，向大家讲述支持 `Fluent` 的查询构造器 `query` 与语法编译器 `grammer` 的原理。
