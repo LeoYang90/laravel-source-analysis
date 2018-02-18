@@ -1,74 +1,75 @@
 # 前言
 
-这篇文章是对PHP自动加载功能的一个总结，内容涉及PHP的自动加载功能、PHP的命名空间、PHP的PSR0与PSR4标准等内容。
+这篇文章是对 `PHP自动加载功能` 的一个总结，内容涉及 `PHP自动加载功能` 、`PHP命名空间`、`PSR0/PSR4标准` 等内容。
 
-----------
+# 一、PHP 自动加载功能
 
-# 一、PHP自动加载功能
+## PHP 自动加载功能的由来
 
+在 PHP 开发过程中，如果希望从外部引入一个 Class ，通常会使用 `include` 和 `require` 方法，去把定义这个 Class 的文件包含进来。这个在小规模开发的时候，没什么大问题。但在大型的开发项目中，使用这种方式会带来一些隐含的问题：如果一个 PHP 文件需要使用很多其它类，那么就需要很多的 `require/include` 语句，这样有可能会 **造成遗漏** 或者 **包含进不必要的类文件**。如果大量的文件都需要使用其它的类，那么要保证每个文件都包含正确的类文件肯定是一个噩梦， 况且 require_once 的代价很大。
 
-## PHP自动加载功能的由来
+PHP5 为这个问题提供了一个解决方案，这就是 `类的自动加载(autoload)机制`。`autoload机制` 可以使得 PHP 程序有可能在使用类时才自动包含类文件，而不是一开始就将所有的类文件`include`进来，这种机制也称为 `Lazy loading (延迟加载)`。
 
+* 总结起来，自动加载功能带来了几处优点：
 
-
-在PHP开发过程中，如果希望从外部引入一个class，通常会使用include和require方法，去把定义这个class的文件包含进来。这个在小规模开发的时候，没什么大问题。但在大型的开发项目中，使用这种方式会带来一些隐含的问题：如果一个PHP文件需要使用很多其它类，那么就需要很多的require/include语句，这样有可能会造成遗漏或者包含进不必要的类文件。如果大量的文件都需要使用其它的类，那么要保证每个文件都包含正确的类文件肯定是一个噩梦， 况且require_once的代价很大。
-
-PHP5为这个问题提供了一个解决方案，这就是类的自动装载(autoload)机制。autoload机制可以使得PHP程序有可能在使用类时才自动包含类文件，而不是一开始就将所有的类文件include进来，这种机制也称为lazy loading。
-
-&emsp;&emsp;总结起来，自动加载功能带来了几处优点：
-
->  1. 使用类之前无需include或者require
->  2. *使用类的时候才会require/include文件，实现了lazy loading，避免了require/include多余文件。*
->  3. *无需考虑引入类的实际磁盘地址，实现了逻辑和实体文件的分离。*
+  >  1. 使用类之前无需 `include / require`
+  >  2. 使用类的时候才会 `include / require` 文件，实现了 `lazy loading` ，避免了 `include / require` 多余文件。
+  >  3. 无需考虑引入 **类的实际磁盘地址** ，实现了逻辑和实体文件的分离。
 
 
-&emsp;&emsp;如果想具体详细的了解关于自动加载的功能，可以查看资料：
+* 如果想具体详细的了解关于自动加载的功能，可以查看资料：
+>[PHP 类自动加载机制](http://blog.csdn.net/hguisu/article/details/7463333)
+>
+>[PHP autoload机制的实现解析](http://www.jb51.net/article/31279.htm)
 
 
->[PHP的类自动加载机制](http://blog.csdn.net/hguisu/article/details/7463333)
-
->[PHP的autoload机制的实现解析](http://www.jb51.net/article/31279.htm)
+## PHP 自动加载函数 __autoload()
 
 
-## PHP自动加载函数__autoload()
+* 通常 PHP5 在使用一个类时，如果发现这个类没有加载，就会自动运行 __autoload() 函数，这个函数是我们在程序中自定义的，在这个函数中我们可以加载需要使用的类。下面是个简单的示例：
+  ```php
+  <?php
+  function __autoload($classname) {
+     require_once ($classname . ".class.php");
+  }
+  ```
+
+* 在我们这个简单的例子中，我们直接将类名加上扩展名 `.class.php` 构成了类文件名，然后使用 `require_once` 将其加载。
+
+  > 从这个例子中，我们可以看出 __autoload 至少要做三件事情：
+  >  1. 根据类名确定类文件名；
+  >
+  >  2. 确定类文件所在的磁盘路径 ``(在我们的例子是最简单的情况，类与调用它们的PHP程序文件在同一个文件夹下)``；
+  >
+  >  3. 将类从磁盘文件中加载到系统中。
 
 
-&emsp;&emsp;通常PHP5在使用一个类时，如果发现这个类没有加载，就会自动运行_autoload()函数，这个函数是我们在程序中自定义的，在这个函数中我们可以加载需要使用的类。下面是个简单的示例：
+* 第三步最简单，只需要使用 `include / require` 即可。要实现第一步，第二步的功能，必须在开发时约定类名与磁盘文件的映射方法，只有这样我们才能根据类名找到它对应的磁盘文件。
 
-```php
-<?php
-function __autoload($classname) {
-   require_once ($classname . "class.php");
-}
-```
-&emsp;&emsp;在我们这个简单的例子中，我们直接将类名加上扩展名”.class.php”构成了类文件名，然后使用require_once将其加载。从这个例子中，我们可以看出autoload至少要做三件事情：
->  *1. 根据类名确定类文件名；*
+* 当有大量的类文件要包含的时候，我们只要确定相应的规则，然后在 **`__autoload()` 函数中，将类名与实际的磁盘文件对应起来，就可以实现 `lazy loading` 的效果** 。从这里我们也可以看出 `__autoload()` 函数的实现中最重要的是类名与实际的磁盘文件映射规则的实现。
 
->  *2. 确定类文件所在的磁盘路径(在我们的例子是最简单的情况，类与调用它们的PHP程序文件在同一个文件夹下)；*
+## __autoload() 函数存在的问题
 
->  *3. 将类从磁盘文件中加载到系统中。*
+* 如果在一个系统的实现中，如果需要使用很多其它的类库，这些类库可能是由不同的开发人员编写的，  其类名与实际的磁盘文件的映射规则不尽相同。这时如果要实现类库文件的自动加载，就必须 **在__autoload()函数中将所有的映射规则全部实现**，这样的话 `__autoload()` 函数有可能会非常复杂，甚至无法实现。最后可能会导致 `__autoload()` 函数十分臃肿，这时即便能够实现，也会给将来的维护和系统效率带来很大的负面影响。
 
-&emsp;&emsp;
-&emsp;&emsp;第三步最简单，只需要使用include/require即可。要实现第一步，第二步的功能，必须在开发时约定类名与磁盘文件的映射方法，只有这样我们才能根据类名找到它对应的磁盘文件。
-
-&emsp;&emsp;当有大量的类文件要包含的时候，我们只要确定相应的规则，然后在 **__autoload()函数中，将类名与实际的磁盘文件对应起来，就可以实现lazy loading的效果** 。从这里我们也可以看出_autoload()函数的实现中最重要的是类名与实际的磁盘文件映射规则的实现。
-
-## \_\_autoload()函数存在的问题
-
-&emsp;&emsp;如果在一个系统的实现中，如果需要使用很多其它的类库，这些类库可能是由不同的开发人员编写的，  其类名与实际的磁盘文件的映射规则不尽相同。这时如果要实现类库文件的自动加载，就必须 **在__autoload()函数中将所有的映射规则全部实现**，这样的话 `__autoload()` 函数有可能会非常复杂，甚至无法实现。最后可能会导致 `__autoload()` 函数十分臃肿，这时即便能够实现，也会给将来的维护和系统效率带来很大的负面影响。
-
-&emsp;&emsp;那么问题出现在哪里呢？问题出现在 **_autoload()是全局函数只能定义一次** ，不够灵活，所以所有的类名与文件名对应的逻辑规则都要在一个函数里面实现，造成这个函数的臃肿。那么如何来解决这个问题呢？答案就是使用一个 **_autoload调用堆栈** ，不同的映射关系写到不同的_autoload函数中去，然后统一注册统一管理，这个就是PHP5引入的SPL Autoload。
+* 那么问题出现在哪里呢？问题出现在 **__autoload() 是全局函数只能定义一次** ，不够灵活，所以所有的类名与文件名对应的逻辑规则都要在一个函数里面实现，造成这个函数的臃肿。那么如何来解决这个问题呢？答案就是使用一个 **__autoload调用堆栈** ，不同的映射关系写到不同的 `__autoload函数` 中去，然后统一注册统一管理，这个就是PHP5引入的 `SPL Autoload` 。
 
 ## SPL Autoload
 
-&emsp;&emsp;SPL是Standard PHP Library(标准PHP库)的缩写。它是PHP5引入的一个扩展库，其主要功能包括autoload机制的实现及包括各种Iterator接口或类。SPL Autoload具体有几个函数：
+* SPL是Standard PHP Library(标准PHP库)的缩写。它是PHP5引入的一个扩展库，其主要功能包括autoload机制的实现及包括各种Iterator接口或类。SPL Autoload具体有几个函数：
+  >  1. *spl_autoload_register：注册__autoload()函数*
+  >  2. *spl_autoload_unregister：注销已注册的函数*
+  >  3. *spl_autoload_functions：返回所有已注册的函数*
+  >  4. *spl_autoload_call：尝试所有已注册的函数来加载类*
+  >  5. *spl_autoload ：__autoload()的默认实现*
+  >  6. *spl_autoload_extionsions： 注册并返回spl_autoload函数使用的默认文件扩展名。*
 
->  1. *spl_autoload_register：注册__autoload()函数*
->  2. *spl_autoload_unregister：注销已注册的函数*
->  3. *spl_autoload_functions：返回所有已注册的函数*
->  4. *spl_autoload_call：尝试所有已注册的函数来加载类*
->  5. *spl_autoload ：__autoload()的默认实现*
->  6. *spl_autoload_extionsions： 注册并返回spl_autoload函数使用的默认文件扩展名。*
+# todo Continue
+# todo Continue
+# todo Continue
+# todo Continue
+# todo Continue
+# todo Continue
 
 &emsp;&emsp;
 &emsp;&emsp;这几个函数具体详细用法可见 [php中spl_autoload详解](http://www.jb51.net/article/56370.htm)
