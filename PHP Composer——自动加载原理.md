@@ -197,18 +197,18 @@ PHP5 为这个问题提供了一个解决方案，这就是 `类的自动加载(
 &emsp;&emsp;
 > 5.在类名中，每个下划线_符号要转换成DIRECTORYSEPARATOR(操作系统路径分隔符)。在namespace中，下划线\符号是没有（特殊）意义的。
 
-&emsp;&emsp;这句话的意思就是说，如果我们的命名空间是/Symfony/Core/Request_a，那么我们就应该把它映射到\Symfony\Core\Request\a这样的目录。为什么会有这种规定呢？这是因为PHP5之前并没有命名空间，程序员只能把名字起成Symfony_Core_Request_a这样，PSR0的这条规定就是为了兼容这种情况。
+&emsp;&emsp;这句话的意思就是说，如果我们的命名空间是\Symfony\Core\Request_a，那么我们就应该把它映射到\Symfony\Core\Request\a这样的目录。为什么会有这种规定呢？这是因为PHP5之前并没有命名空间，程序员只能把名字起成Symfony_Core_Request_a这样，PSR0的这条规定就是为了兼容这种情况。
 
 &emsp;&emsp;剩下两个很简单就不说了。
 &emsp;&emsp;
 
-&emsp;&emsp;有这样的命名空间命名规则和映射标准，我们就可以推理出我们应该把命名空间所在的文件该放在哪里了。依旧以Symfony/Core/Request为例， 它的目录是/path/to/project/vendor/Symfony/Core/Request.php，其中/path/to/project是你项目在磁盘的位置，/path/to/project/vendor是项目用的所有第三方库所在目录。/path/to/project/vendor/Symfony就是与顶级命名空间/Symfony存在对应关系的目录，再往下的文件目录就是按照PSR0标准建立的：
-> &emsp;&emsp; /Symfony/Core/Request  =>  /Symfony/Core/Request.php
+&emsp;&emsp;有这样的命名空间命名规则和映射标准，我们就可以推理出我们应该把命名空间所在的文件该放在哪里了。依旧以\Symfony\Core\Request为例， 它的目录是/path/to/project/vendor/Symfony/Core/Request.php，其中/path/to/project是你项目在磁盘的位置，/path/to/project/vendor是项目用的所有第三方库所在目录。/path/to/project/vendor/Symfony就是与顶级命名空间\Symfony存在对应关系的目录，再往下的文件目录就是按照PSR0标准建立的：
+> &emsp;&emsp; \Symfony\Core\Request  =>  /Symfony/Core/Request.php
 
 
 &emsp;&emsp; 一切很完满了是吗？不，还有一些瑕疵：
 > 1. 我们是否应该还兼容没有命名空间的情况呢？
-> 2. 按照PSR0标准，命名空间/A/B/C/D/E/F必然对应一个目录结构/A/B/C/D/E/F，这种目录结构层次是不是太深了？
+> 2. 按照PSR0标准，命名空间\A\B\C\D\E\F必然对应一个目录结构/A/B/C/D/E/F，这种目录结构层次是不是太深了？
 
 ## PSR4标准
 &emsp;&emsp;2013年底，新出了第5个规范——PSR-4。
